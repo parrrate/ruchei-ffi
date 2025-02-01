@@ -1,7 +1,3 @@
-#![allow(clippy::empty_docs)] // abi_stable
-#![allow(non_camel_case_types)] // abi_stable
-#![allow(non_local_definitions)] // abi_stable
-
 use std::{cell::RefCell, collections::HashMap, fmt::Debug, num::NonZeroU64, sync::Mutex};
 
 use abi_stable::{
@@ -15,7 +11,7 @@ use abi_stable::{
     DynTrait, RMut, RRef, StableAbi,
 };
 use bumpalo::Bump;
-use ruchei_ffi_core::Registry;
+use ruchei_ffi_registry::Registry;
 use tracing_core::{
     callsite::Identifier,
     field::{FieldSet, Value, ValueSet, Visit},

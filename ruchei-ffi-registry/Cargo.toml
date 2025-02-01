@@ -1,5 +1,5 @@
 [package]
-name = "ruchei-ffi-core"
+name = "ruchei-ffi-registry"
 version = "0.0.0-a.0"
 edition.workspace = true
 publish.workspace = true

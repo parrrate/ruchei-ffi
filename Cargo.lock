@@ -5,8 +5,7 @@ version = 4
 [[package]]
 name = "abi_stable"
 version = "0.11.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "69d6512d3eb05ffe5004c59c206de7f99c34951504056ce23fc953842f12c445"
+source = "git+https://github.com/parrrate/abi_stable#d54e21ac02e1a580b3928cce0ca1c9627bee1395"
 dependencies = [
  "abi_stable_derive",
  "abi_stable_shared",
@@ -26,8 +25,7 @@ dependencies = [
 [[package]]
 name = "abi_stable_derive"
 version = "0.11.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d7178468b407a4ee10e881bc7a328a65e739f0863615cca4429d43916b05e898"
+source = "git+https://github.com/parrrate/abi_stable#d54e21ac02e1a580b3928cce0ca1c9627bee1395"
 dependencies = [
  "abi_stable_shared",
  "as_derive_utils",
@@ -42,8 +40,7 @@ dependencies = [
 [[package]]
 name = "abi_stable_shared"
 version = "0.11.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b2b5df7688c123e63f4d4d649cba63f2967ba7f7861b1664fca3f77d3dad2b63"
+source = "git+https://github.com/parrrate/abi_stable#d54e21ac02e1a580b3928cce0ca1c9627bee1395"
 dependencies = [
  "core_extensions",
 ]
@@ -51,13 +48,21 @@ dependencies = [
 [[package]]
 name = "as_derive_utils"
 version = "0.11.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ff3c96645900a44cf11941c111bd08a6573b0e2f9f69bc9264b179d8fae753c4"
+source = "git+https://github.com/parrrate/abi_stable#d54e21ac02e1a580b3928cce0ca1c9627bee1395"
 dependencies = [
  "core_extensions",
  "proc-macro2",
  "quote",
  "syn 1.0.109",
+]
+
+[[package]]
+name = "async-ffi"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f4de21c0feef7e5a556e51af767c953f0501f7f300ba785cc99c47bdc8081a50"
+dependencies = [
+ "abi_stable",
 ]
 
 [[package]]
@@ -124,6 +129,18 @@ dependencies = [
  "once_cell",
  "parking_lot_core",
 ]
+
+[[package]]
+name = "futures-core"
+version = "0.3.31"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "05f29059c0c2090612e8d742178b0580d2dc940c837851ad723096f87af6663e"
+
+[[package]]
+name = "futures-sink"
+version = "0.3.31"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e575fab7d1e0dcb8d0c7bcf9a63ee213816ab51902e6d244a95819acacf1d4f7"
 
 [[package]]
 name = "generational-arena"
@@ -202,6 +219,26 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a"
 
 [[package]]
+name = "pin-project"
+version = "1.1.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1e2ec53ad785f4d35dac0adea7f7dc6f1bb277ad84a680c7afefeae05d1f5916"
+dependencies = [
+ "pin-project-internal",
+]
+
+[[package]]
+name = "pin-project-internal"
+version = "1.1.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d56a66c0c55993aa927429d0f8a0abfd74f084e4d9c192cffed01e418d83eefb"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.90",
+]
+
+[[package]]
 name = "proc-macro2"
 version = "1.0.92"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -240,9 +277,16 @@ dependencies = [
 [[package]]
 name = "ruchei-ffi"
 version = "0.0.0-a.0"
+dependencies = [
+ "abi_stable",
+ "async-ffi",
+ "futures-core",
+ "futures-sink",
+ "ruchei-route",
+]
 
 [[package]]
-name = "ruchei-ffi-core"
+name = "ruchei-ffi-registry"
 version = "0.0.0-a.0"
 dependencies = [
  "dashmap",
@@ -254,8 +298,19 @@ version = "0.0.0-a.0"
 dependencies = [
  "abi_stable",
  "bumpalo",
- "ruchei-ffi-core",
+ "ruchei-ffi-registry",
  "tracing-core",
+]
+
+[[package]]
+name = "ruchei-route"
+version = "0.1.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "05f1ad95a1bab0740e4b52b23d9a4caa2fa1ad743112121d153d9a20ad66fdec"
+dependencies = [
+ "futures-core",
+ "futures-sink",
+ "pin-project",
 ]
 
 [[package]]
