@@ -9,7 +9,7 @@ authors.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-ruchei-ffi-core.workspace = true
+ruchei-ffi-registry.workspace = true
 
 abi_stable.workspace = true
 bumpalo.workspace = true

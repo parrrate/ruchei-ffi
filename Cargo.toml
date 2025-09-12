@@ -1,5 +1,5 @@
 [workspace]
-members = ["ruchei-ffi-core", "ruchei-ffi-tracing"]
+members = ["ruchei-ffi-registry", "ruchei-ffi-tracing"]
 
 [workspace.package]
 edition = "2021"
@@ -25,14 +25,17 @@ authors.workspace = true
 rust-version.workspace = true
 
 [workspace.dependencies]
-ruchei-ffi-core = { path = "ruchei-ffi-core" }
+ruchei-ffi-registry = { path = "ruchei-ffi-registry" }
 ruchei-ffi-tracing = { path = "ruchei-ffi-tracing" }
 
-abi_stable = { version = "0.11.3", default-features = false }
-async-ffi = "0.5.0"
+abi_stable = { git = "https://github.com/parrrate/abi_stable", default-features = false }
+async-ffi = { version = "0.5.0", features = ["abi_stable"] }
 bumpalo = { version = "3.16.0", features = ["collections"] }
 dashmap = "6.1.0"
+futures-core = "0.3.31"
+futures-sink = "0.3.31"
 libloading = "0.8.6"
+ruchei-route = "0.1.7"
 tokio = { version = "1", features = [
     "macros",
     "rt-multi-thread",
@@ -44,4 +47,14 @@ tracing-core = "0.1.33"
 tracing-subscriber = "0.3.19"
 tracking-allocator = "0.4.0"
 
+[patch.crates-io]
+abi_stable = { git = "https://github.com/parrrate/abi_stable", default-features = false }
+abi_stable_derive = { git = "https://github.com/parrrate/abi_stable", default-features = false }
+abi_stable_shared = { git = "https://github.com/parrrate/abi_stable", default-features = false }
+
 [dependencies]
+abi_stable.workspace = true
+async-ffi.workspace = true
+futures-core.workspace = true
+futures-sink.workspace = true
+ruchei-route.workspace = true
