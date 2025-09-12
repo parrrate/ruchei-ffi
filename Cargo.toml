@@ -1,0 +1,47 @@
+[workspace]
+members = ["ruchei-ffi-context", "ruchei-ffi-core", "ruchei-ffi-tracing"]
+
+[workspace.package]
+edition = "2021"
+publish = false
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/parrrate/ruchei-ffi"
+authors = ["Alisa Feistel <alisafeistel@gmail.com>"]
+rust-version = "1.83"
+
+[package]
+name = "ruchei-ffi"
+version = "0.0.0-a.0"
+description = "FFI bindings for streams"
+documentation = "https://docs.rs/ruchei-ffi"
+keywords = ["streams", "async", "stream"]
+categories = ["asynchronous"]
+readme = "README.md"
+edition.workspace = true
+publish.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+
+[workspace.dependencies]
+ruchei-ffi-context = { path = "ruchei-ffi-context" }
+ruchei-ffi-core = { path = "ruchei-ffi-core" }
+ruchei-ffi-tracing = { path = "ruchei-ffi-tracing" }
+
+abi_stable = { version = "0.11.3", default-features = false }
+bumpalo = { version = "3.16.0", features = ["collections"] }
+dashmap = "6.1.0"
+libloading = "0.8.6"
+tokio = { version = "1", features = [
+    "macros",
+    "rt-multi-thread",
+    "sync",
+    "time",
+] }
+tracing = "0.1.41"
+tracing-core = "0.1.33"
+tracing-subscriber = "0.3.19"
+tracking-allocator = "0.4.0"
+
+[dependencies]

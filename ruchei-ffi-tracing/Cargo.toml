@@ -1,0 +1,16 @@
+[package]
+name = "ruchei-ffi-tracing"
+version = "0.0.0-a.0"
+edition.workspace = true
+publish.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+ruchei-ffi-core.workspace = true
+
+abi_stable.workspace = true
+bumpalo.workspace = true
+tracing-core.workspace = true
