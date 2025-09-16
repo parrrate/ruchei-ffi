@@ -112,7 +112,7 @@ impl RVisit for &mut dyn Visit {
         (*self).record_debug(&field.field(), value)
     }
 
-    fn visitor(&mut self) -> RVisitor {
+    fn visitor(&mut self) -> RVisitor<'_> {
         RVisitor(RVisit_TO::from_ptr(self, TD_Opaque))
     }
 }
