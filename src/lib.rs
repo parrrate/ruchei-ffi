@@ -6,9 +6,8 @@ use std::{
 };
 
 use abi_stable::{
-    extern_fn_panic_handling, sabi_extern_fn,
+    StableAbi, extern_fn_panic_handling, sabi_extern_fn,
     std_types::{ROption, RResult, Tuple2},
-    StableAbi,
 };
 use async_ffi::{ContextExt, FfiContext, FfiPoll};
 use futures_core::{Stream, TryStream};
@@ -87,14 +86,14 @@ impl<'a, T> LocalBorrowingFfiStream<'a, T> {
     unsafe fn from_ptr<S: 'a, X: StreamStrategy<S, T = T>>(ptr: *mut S) -> Self {
         #[sabi_extern_fn]
         unsafe fn drop_fn<S>(ptr: *mut ()) {
-            drop(Box::from_raw(ptr.cast::<S>()));
+            drop(unsafe { Box::from_raw(ptr.cast::<S>()) });
         }
 
         unsafe extern "C" fn next_fn<S, X: StreamStrategy<S>>(
             ptr: *mut (),
             context_ptr: *mut FfiContext,
         ) -> StreamPoll<X::T> {
-            let r = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let r = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| unsafe {
                 let pin = Pin::new_unchecked(&mut *ptr.cast::<S>());
                 (*context_ptr).with_context(|cx| X::poll_next(pin, cx))
             }));
@@ -255,7 +254,7 @@ impl<'a, In, Out, E> LocalBorrowingFfiDealer<'a, In, Out, E> {
             ptr: *mut (),
             context_ptr: *mut FfiContext,
         ) -> SinkPoll<X::E> {
-            let r = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let r = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| unsafe {
                 let pin = Pin::new_unchecked(&mut *ptr.cast::<S>());
                 (*context_ptr).with_context(|cx| X::poll_ready(pin, cx))
             }));
@@ -274,7 +273,7 @@ impl<'a, In, Out, E> LocalBorrowingFfiDealer<'a, In, Out, E> {
             ptr: *mut (),
             item: Out,
         ) -> Started<X::E> {
-            let r = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let r = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| unsafe {
                 let pin = Pin::new_unchecked(&mut *ptr.cast::<S>());
                 X::start_send(pin, item)
             }));
@@ -294,7 +293,7 @@ impl<'a, In, Out, E> LocalBorrowingFfiDealer<'a, In, Out, E> {
             ptr: *mut (),
             context_ptr: *mut FfiContext,
         ) -> SinkPoll<X::E> {
-            let r = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let r = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| unsafe {
                 let pin = Pin::new_unchecked(&mut *ptr.cast::<S>());
                 (*context_ptr).with_context(|cx| X::poll_flush(pin, cx))
             }));
@@ -313,7 +312,7 @@ impl<'a, In, Out, E> LocalBorrowingFfiDealer<'a, In, Out, E> {
             ptr: *mut (),
             context_ptr: *mut FfiContext,
         ) -> SinkPoll<X::E> {
-            let r = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let r = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| unsafe {
                 let pin = Pin::new_unchecked(&mut *ptr.cast::<S>());
                 (*context_ptr).with_context(|cx| X::poll_close(pin, cx))
             }));
@@ -329,7 +328,7 @@ impl<'a, In, Out, E> LocalBorrowingFfiDealer<'a, In, Out, E> {
         }
 
         Self {
-            stream: LocalBorrowingFfiStream::from_ptr::<_, X>(ptr),
+            stream: unsafe { LocalBorrowingFfiStream::from_ptr::<_, X>(ptr) },
             ready_fn: ready_fn::<_, _, X>,
             start_fn: start_fn::<_, _, X>,
             flush_fn: flush_fn::<_, _, X>,
@@ -572,7 +571,7 @@ impl<'a, K, M, Out, E> LocalBorrowingFfiRouter<'a, K, M, Out, E> {
             route: *const K,
             context_ptr: *mut FfiContext,
         ) -> SinkPoll<X::E> {
-            let r = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let r = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| unsafe {
                 let pin = Pin::new_unchecked(&mut *ptr.cast::<S>());
                 (*context_ptr).with_context(|cx| X::poll_ready(pin, &*route, cx))
             }));
@@ -592,7 +591,7 @@ impl<'a, K, M, Out, E> LocalBorrowingFfiRouter<'a, K, M, Out, E> {
             route: *const K,
             context_ptr: *mut FfiContext,
         ) -> SinkPoll<X::E> {
-            let r = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let r = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| unsafe {
                 let pin = Pin::new_unchecked(&mut *ptr.cast::<S>());
                 (*context_ptr).with_context(|cx| X::poll_flush(pin, &*route, cx))
             }));
@@ -608,7 +607,7 @@ impl<'a, K, M, Out, E> LocalBorrowingFfiRouter<'a, K, M, Out, E> {
         }
 
         Self {
-            dealer: LocalBorrowingFfiDealer::from_ptr::<_, X::D>(ptr),
+            dealer: unsafe { LocalBorrowingFfiDealer::from_ptr::<_, X::D>(ptr) },
             is_routing,
             ready_fn: (is_routing).then_some(ready_fn::<_, _, _, X>),
             flush_fn: (is_routing).then_some(flush_fn::<_, _, _, X>),
